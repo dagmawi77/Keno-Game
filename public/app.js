@@ -5,12 +5,12 @@ class KenoGame {
         this.token = localStorage.getItem('keno_token');
         this.user = null;
         this.selectedNumbers = [];
-        this.currentWager = 1.00;
+        this.currentWager = 25.00;
         this.currentSpotSize = 1;
         this.currentAuthMode = 'login';
         this.pendingRegistration = null;
         this.purchasedTickets = JSON.parse(localStorage.getItem('keno_tickets') || '[]');
-        this.userBalance = parseFloat(localStorage.getItem('keno_balance') || '1000.00');
+        this.userBalance = parseFloat(localStorage.getItem('keno_balance') || '50000.00');
         
         this.init();
     }
@@ -163,7 +163,7 @@ class KenoGame {
 
     setCustomWager(value) {
         const amount = parseFloat(value);
-        if (amount >= 0.25 && amount <= 20.00) {
+        if (amount >= 5 && amount <= 1000) {
             this.currentWager = amount;
             
             // Clear wager button selection
@@ -177,8 +177,8 @@ class KenoGame {
 
     updateTicketSummary() {
         document.getElementById('summarySpots').textContent = this.selectedNumbers.length;
-        document.getElementById('summaryWager').textContent = `$${this.currentWager.toFixed(2)}`;
-        document.getElementById('summaryTotal').textContent = `$${this.currentWager.toFixed(2)}`;
+        document.getElementById('summaryWager').textContent = `${this.currentWager.toFixed(2)} ETB`;
+        document.getElementById('summaryTotal').textContent = `${this.currentWager.toFixed(2)} ETB`;
         
         // Enable/disable purchase button
         const purchaseBtn = document.getElementById('purchaseBtn');
@@ -280,7 +280,7 @@ class KenoGame {
     updateBalanceDisplay() {
         const balanceElement = document.getElementById('userBalance');
         if (balanceElement) {
-            balanceElement.textContent = `$${this.userBalance.toFixed(2)}`;
+            balanceElement.textContent = `${this.userBalance.toFixed(2)} ETB`;
         }
     }
 
@@ -336,10 +336,10 @@ class KenoGame {
                 </div>
                 <div class="ticket-details">
                     <div>Spots: ${ticket.spotSize}</div>
-                    <div>Wager: $${ticket.wager.toFixed(2)}</div>
+                    <div>Wager: ${ticket.wager.toFixed(2)} ETB</div>
                     <div>Time: ${new Date(ticket.purchaseTime).toLocaleTimeString()}</div>
                     ${ticket.matches !== null ? `<div>Matches: ${ticket.matches}</div>` : ''}
-                    ${ticket.payout > 0 ? `<div>Payout: $${ticket.payout.toFixed(2)}</div>` : ''}
+                    ${ticket.payout > 0 ? `<div>Payout: ${ticket.payout.toFixed(2)} ETB</div>` : ''}
                 </div>
                 <div class="ticket-spots">
                     ${ticket.spots.map(spot => 
@@ -472,7 +472,7 @@ class KenoGame {
             // Demo login credentials
             if ((username === 'admin' && password === 'admin123') || 
                 (username === 'player' && password === 'player123') ||
-                (username === '+1234567890' && password === 'mobile123')) {
+                (username === '+251912345678' && password === 'mobile123')) {
                 
                 this.token = 'demo_token_' + Date.now();
                 this.user = { 
@@ -486,7 +486,7 @@ class KenoGame {
                 this.startGame();
                 this.showNotification('Login successful!', 'success');
             } else {
-                this.showNotification('Invalid credentials. Try admin/admin123, player/player123, or +1234567890/mobile123', 'error');
+                this.showNotification('Invalid credentials. Try admin/admin123, player/player123, or +251912345678/mobile123', 'error');
             }
         } catch (error) {
             this.showNotification('Login failed', 'error');
@@ -510,8 +510,14 @@ class KenoGame {
             return;
         }
 
-        if (mobile.length < 10) {
-            this.showNotification('Please enter a valid mobile number', 'error');
+        if (mobile.length < 9 || mobile.length > 10) {
+            this.showNotification('Please enter a valid Ethiopian mobile number (9-10 digits)', 'error');
+            return;
+        }
+        
+        // Ethiopian mobile number validation (should start with 9)
+        if (!mobile.startsWith('9')) {
+            this.showNotification('Ethiopian mobile numbers must start with 9', 'error');
             return;
         }
 

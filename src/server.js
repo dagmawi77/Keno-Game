@@ -296,11 +296,11 @@ app.get('/api/v1/paytables', (req, res) => {
   res.json({
     success: true,
     data: {
-      1: { name: "1-Spot", wager: 1.00, payouts: { 1: 3.00 } },
-      2: { name: "2-Spot", wager: 1.00, payouts: { 2: 12.00 } },
-      3: { name: "3-Spot", wager: 1.00, payouts: { 2: 1.00, 3: 42.00 } },
-      4: { name: "4-Spot", wager: 1.00, payouts: { 2: 1.00, 3: 3.00, 4: 100.00 } },
-      5: { name: "5-Spot", wager: 1.00, payouts: { 2: 1.00, 3: 2.00, 4: 10.00, 5: 500.00 } }
+      1: { name: "1-Spot", wager: 25.00, payouts: { 1: 75.00 } },
+      2: { name: "2-Spot", wager: 25.00, payouts: { 2: 300.00 } },
+      3: { name: "3-Spot", wager: 25.00, payouts: { 2: 25.00, 3: 1050.00 } },
+      4: { name: "4-Spot", wager: 25.00, payouts: { 2: 25.00, 3: 75.00, 4: 2500.00 } },
+      5: { name: "5-Spot", wager: 25.00, payouts: { 2: 25.00, 3: 50.00, 4: 250.00, 5: 12500.00 } }
     }
   });
 });

@@ -64,24 +64,15 @@
                                     <label for="regEmail">Email</label>
                                     <input type="email" id="regEmail" name="email" placeholder="Enter your email" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="regMobile">Mobile Number</label>
-                                    <div class="mobile-input-group">
-                                        <select id="countryCode" class="country-code">
-                                            <option value="+1">+1 (US)</option>
-                                            <option value="+44">+44 (UK)</option>
-                                            <option value="+91">+91 (India)</option>
-                                            <option value="+86">+86 (China)</option>
-                                            <option value="+33">+33 (France)</option>
-                                            <option value="+49">+49 (Germany)</option>
-                                            <option value="+81">+81 (Japan)</option>
-                                            <option value="+82">+82 (Korea)</option>
-                                            <option value="+55">+55 (Brazil)</option>
-                                            <option value="+61">+61 (Australia)</option>
-                                        </select>
-                                        <input type="tel" id="regMobile" name="mobile" placeholder="Enter mobile number" required>
+                                    <div class="form-group">
+                                        <label for="regMobile">Mobile Number</label>
+                                        <div class="mobile-input-group">
+                                            <select id="countryCode" class="country-code">
+                                                <option value="+251">+251 (Ethiopia)</option>
+                                            </select>
+                                            <input type="tel" id="regMobile" name="mobile" placeholder="9XXXXXXXXX" required style="display: block; visibility: visible;">
+                                        </div>
                                     </div>
-                                </div>
                                 <div class="form-group">
                                     <label for="regPassword">Password</label>
                                     <input type="password" id="regPassword" name="password" placeholder="Create a password" required>
@@ -160,15 +151,15 @@
                             <div class="config-section">
                                 <label for="wager">Wager Amount:</label>
                                 <div class="wager-buttons">
-                                    <button class="wager-btn" data-amount="0.25">$0.25</button>
-                                    <button class="wager-btn" data-amount="0.50">$0.50</button>
-                                    <button class="wager-btn" data-amount="1.00">$1.00</button>
-                                    <button class="wager-btn" data-amount="2.00">$2.00</button>
-                                    <button class="wager-btn" data-amount="5.00">$5.00</button>
-                                    <button class="wager-btn" data-amount="10.00">$10.00</button>
-                                    <button class="wager-btn" data-amount="20.00">$20.00</button>
+                                    <button class="wager-btn" data-amount="5">5 ETB</button>
+                                    <button class="wager-btn" data-amount="10">10 ETB</button>
+                                    <button class="wager-btn" data-amount="25">25 ETB</button>
+                                    <button class="wager-btn" data-amount="50">50 ETB</button>
+                                    <button class="wager-btn" data-amount="100">100 ETB</button>
+                                    <button class="wager-btn" data-amount="250">250 ETB</button>
+                                    <button class="wager-btn" data-amount="500">500 ETB</button>
                                 </div>
-                                <input type="number" id="customWager" placeholder="Custom amount" min="0.25" max="20.00" step="0.25">
+                                <input type="number" id="customWager" placeholder="Custom amount" min="5" max="1000" step="5">
                             </div>
 
                             <div class="selected-numbers">
@@ -185,11 +176,11 @@
                                 </div>
                                 <div class="summary-row">
                                     <span>Wager:</span>
-                                    <span id="summaryWager">$0.00</span>
+                                    <span id="summaryWager">0.00 ETB</span>
                                 </div>
                                 <div class="summary-row total">
                                     <span>Total Cost:</span>
-                                    <span id="summaryTotal">$0.00</span>
+                                    <span id="summaryTotal">0.00 ETB</span>
                                 </div>
                             </div>
 
@@ -234,15 +225,15 @@
                                 <h3>Provably Fair</h3>
                                 <p>Cryptographically secure random number generation with verifiable results</p>
                             </div>
-                            <div class="feature">
-                                <i class="fas fa-trophy"></i>
-                                <h3>Multiple Prizes</h3>
-                                <p>Win prizes for matching 2 or more numbers, with jackpots up to 100,000:1</p>
-                            </div>
+                        <div class="feature">
+                            <i class="fas fa-trophy"></i>
+                            <h3>Multiple Prizes</h3>
+                            <p>Win prizes for matching 2 or more numbers, with jackpots up to 500:1 in ETB</p>
+                        </div>
                             <div class="feature">
                                 <i class="fas fa-mobile-alt"></i>
                                 <h3>WhatsApp OTP</h3>
-                                <p>Secure registration with WhatsApp OTP verification for mobile numbers</p>
+                                <p>Secure registration with WhatsApp OTP verification for Ethiopian mobile numbers</p>
                             </div>
                         </div>
 
@@ -261,7 +252,7 @@
                 <div class="footer-content">
                     <div class="footer-section">
                         <h4>Game Info</h4>
-                        <p>Keno is a lottery-style game where you select numbers and win based on matches with the draw.</p>
+                        <p>Keno is a lottery-style game where you select numbers and win prizes in Ethiopian Birr (ETB) based on matches with the draw.</p>
                     </div>
                     <div class="footer-section">
                         <h4>Responsible Gaming</h4>

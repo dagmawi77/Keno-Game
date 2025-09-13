@@ -198,17 +198,50 @@ body {
 
 /* Mobile Input Group */
 .mobile-input-group {
-    display: flex;
+    display: flex !important;
     gap: 0.5rem;
+    width: 100%;
+    align-items: center;
 }
 
 .country-code {
-    width: 120px;
+    width: 140px;
     flex-shrink: 0;
+    background: #f8f9ff;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-weight: 500;
+    color: #667eea;
+    font-size: 1rem;
 }
 
 .mobile-input-group input {
     flex: 1;
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    background: white;
+    color: #333;
+    min-width: 0;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#regMobile {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+}
+
+.mobile-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
 /* OTP Verification */
@@ -895,11 +928,18 @@ body {
     }
 
     .mobile-input-group {
-        flex-direction: column;
+        flex-direction: row;
+        gap: 0.5rem;
     }
 
     .country-code {
-        width: 100%;
+        width: 120px;
+        flex-shrink: 0;
+    }
+    
+    .mobile-input-group input {
+        flex: 1;
+        min-width: 0;
     }
 }
 
