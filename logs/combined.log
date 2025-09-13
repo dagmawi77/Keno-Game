@@ -1,0 +1,16 @@
+2025-09-13 14:12:10:1210 [31merror[39m: [31mDatabase connection failed[39m
+2025-09-13 14:12:23:1223 [32minfo[39m: [32mDraw scheduler configured[39m
+2025-09-13 14:12:23:1223 [32minfo[39m: [32mKeno Game API server started on port 3000[39m
+2025-09-13 14:12:23:1223 [32minfo[39m: [32mEnvironment: development[39m
+2025-09-13 14:12:23:1223 [32minfo[39m: [32mAPI Version: v1[39m
+2025-09-13 14:14:08:148 [32minfo[39m: [32mSIGINT received, shutting down gracefully[39m
+2025-09-13 14:21:51:2151 [32minfo[39m: [32mDraw scheduler configured[39m
+2025-09-13 14:21:51:2151 [32minfo[39m: [32mKeno Game API server started on port 3000[39m
+2025-09-13 14:21:51:2151 [32minfo[39m: [32mEnvironment: development[39m
+2025-09-13 14:21:51:2151 [32minfo[39m: [32mAPI Version: v1[39m
+2025-09-13 14:22:00:220 [32minfo[39m: [32mSIGINT received, shutting down gracefully[39m
+2025-09-13 14:23:14:2314 [32minfo[39m: [32mDraw scheduler configured[39m
+2025-09-13 14:23:14:2314 [32minfo[39m: [32mKeno Game API server started on port 3000[39m
+2025-09-13 14:23:14:2314 [32minfo[39m: [32mEnvironment: development[39m
+2025-09-13 14:23:14:2314 [32minfo[39m: [32mAPI Version: v1[39m
+2025-09-13 14:24:47:2447 [32minfo[39m: [32mSIGINT received, shutting down gracefully[39m

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keno Game - Digital Lottery</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-dice"></i>
+                        <h1>Keno Game</h1>
+                    </div>
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <span class="balance" id="userBalance">$0.00</span>
+                        <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                    </div>
+                    <div class="auth-buttons" id="authButtons">
+                        <button class="btn btn-outline" id="loginBtn">Login</button>
+                        <button class="btn btn-primary" id="registerBtn">Register</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Login/Register Modal -->
+                <div class="modal" id="authModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 id="modalTitle">Login</h2>
+                            <button class="close-btn" id="closeModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Login Form -->
+                            <form id="loginForm" style="display: none;">
+                                <div class="form-group">
+                                    <label for="loginUsername">Username or Mobile</label>
+                                    <input type="text" id="loginUsername" name="username" placeholder="Enter username or mobile number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword">Password</label>
+                                    <input type="password" id="loginPassword" name="password" placeholder="Enter password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                            </form>
+
+                            <!-- Register Form -->
+                            <form id="registerForm" style="display: none;">
+                                <div class="form-group">
+                                    <label for="regUsername">Username</label>
+                                    <input type="text" id="regUsername" name="username" placeholder="Choose a username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regEmail">Email</label>
+                                    <input type="email" id="regEmail" name="email" placeholder="Enter your email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regMobile">Mobile Number</label>
+                                    <div class="mobile-input-group">
+                                        <select id="countryCode" class="country-code">
+                                            <option value="+1">+1 (US)</option>
+                                            <option value="+44">+44 (UK)</option>
+                                            <option value="+91">+91 (India)</option>
+                                            <option value="+86">+86 (China)</option>
+                                            <option value="+33">+33 (France)</option>
+                                            <option value="+49">+49 (Germany)</option>
+                                            <option value="+81">+81 (Japan)</option>
+                                            <option value="+82">+82 (Korea)</option>
+                                            <option value="+55">+55 (Brazil)</option>
+                                            <option value="+61">+61 (Australia)</option>
+                                        </select>
+                                        <input type="tel" id="regMobile" name="mobile" placeholder="Enter mobile number" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regPassword">Password</label>
+                                    <input type="password" id="regPassword" name="password" placeholder="Create a password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regConfirmPassword">Confirm Password</label>
+                                    <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full">Register</button>
+                            </form>
+
+                            <!-- OTP Verification Form -->
+                            <form id="otpForm" style="display: none;">
+                                <div class="otp-header">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <h3>Verify Mobile Number</h3>
+                                    <p>We've sent a 6-digit OTP to your WhatsApp</p>
+                                    <p class="mobile-display" id="otpMobileDisplay">+1 234-567-8900</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="otpCode">Enter OTP</label>
+                                    <input type="text" id="otpCode" name="otp" placeholder="000000" maxlength="6" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full">Verify OTP</button>
+                                <div class="otp-actions">
+                                    <button type="button" class="btn btn-link" id="resendOtpBtn">Resend OTP</button>
+                                    <button type="button" class="btn btn-link" id="changeMobileBtn">Change Mobile</button>
+                                </div>
+                            </form>
+
+                            <div class="auth-switch">
+                                <p id="authSwitchText">Don't have an account?</p>
+                                <button class="btn btn-link" id="authSwitchBtn">Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Interface -->
+                <div class="game-interface" id="gameInterface" style="display: none;">
+                    <div class="game-grid">
+                        <!-- Keno Board -->
+                        <div class="keno-board">
+                            <h2>Select Your Numbers</h2>
+                            <div class="board-container">
+                                <div class="number-grid" id="numberGrid">
+                                    <!-- Numbers 1-80 will be generated here -->
+                                </div>
+                            </div>
+                            <div class="board-controls">
+                                <button class="btn btn-outline" id="quickPickBtn">Quick Pick</button>
+                                <button class="btn btn-outline" id="clearBtn">Clear All</button>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Configuration -->
+                        <div class="ticket-config">
+                            <h3>Ticket Configuration</h3>
+                            
+                            <div class="config-section">
+                                <label for="spotSize">Number of Spots:</label>
+                                <select id="spotSize" name="spotSize">
+                                    <option value="1">1 Spot</option>
+                                    <option value="2">2 Spots</option>
+                                    <option value="3">3 Spots</option>
+                                    <option value="4">4 Spots</option>
+                                    <option value="5">5 Spots</option>
+                                    <option value="6">6 Spots</option>
+                                    <option value="7">7 Spots</option>
+                                    <option value="8">8 Spots</option>
+                                    <option value="9">9 Spots</option>
+                                    <option value="10">10 Spots</option>
+                                </select>
+                            </div>
+
+                            <div class="config-section">
+                                <label for="wager">Wager Amount:</label>
+                                <div class="wager-buttons">
+                                    <button class="wager-btn" data-amount="0.25">$0.25</button>
+                                    <button class="wager-btn" data-amount="0.50">$0.50</button>
+                                    <button class="wager-btn" data-amount="1.00">$1.00</button>
+                                    <button class="wager-btn" data-amount="2.00">$2.00</button>
+                                    <button class="wager-btn" data-amount="5.00">$5.00</button>
+                                    <button class="wager-btn" data-amount="10.00">$10.00</button>
+                                    <button class="wager-btn" data-amount="20.00">$20.00</button>
+                                </div>
+                                <input type="number" id="customWager" placeholder="Custom amount" min="0.25" max="20.00" step="0.25">
+                            </div>
+
+                            <div class="selected-numbers">
+                                <h4>Selected Numbers:</h4>
+                                <div class="selected-list" id="selectedNumbers">
+                                    <p class="empty-message">No numbers selected</p>
+                                </div>
+                            </div>
+
+                            <div class="ticket-summary">
+                                <div class="summary-row">
+                                    <span>Spots:</span>
+                                    <span id="summarySpots">0</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Wager:</span>
+                                    <span id="summaryWager">$0.00</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total Cost:</span>
+                                    <span id="summaryTotal">$0.00</span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-full" id="purchaseBtn" disabled>
+                                Purchase Ticket
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Draw Display -->
+                    <div class="draw-display">
+                        <h3>Latest Draw</h3>
+                        <div class="draw-info">
+                            <div class="draw-numbers" id="drawNumbers">
+                                <div class="loading">Loading draw...</div>
+                            </div>
+                            <div class="draw-details">
+                                <p>Draw #<span id="drawNumber">-</span></p>
+                                <p>Time: <span id="drawTime">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- My Tickets -->
+                    <div class="my-tickets">
+                        <h3>My Tickets</h3>
+                        <div class="tickets-list" id="ticketsList">
+                            <div class="loading">Loading tickets...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <h1>Welcome to Keno Game</h1>
+                        <p>Select 1-10 numbers from 1-80 and win prizes based on how many numbers match the draw!</p>
+                        
+                        <div class="features">
+                            <div class="feature">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Provably Fair</h3>
+                                <p>Cryptographically secure random number generation with verifiable results</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-trophy"></i>
+                                <h3>Multiple Prizes</h3>
+                                <p>Win prizes for matching 2 or more numbers, with jackpots up to 100,000:1</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-mobile-alt"></i>
+                                <h3>WhatsApp OTP</h3>
+                                <p>Secure registration with WhatsApp OTP verification for mobile numbers</p>
+                            </div>
+                        </div>
+
+                        <div class="cta-buttons">
+                            <button class="btn btn-primary btn-large" id="startPlayingBtn">Start Playing</button>
+                            <button class="btn btn-outline btn-large" id="viewRulesBtn">View Rules</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Game Info</h4>
+                        <p>Keno is a lottery-style game where you select numbers and win based on matches with the draw.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Responsible Gaming</h4>
+                        <p>Play responsibly. Set limits and take breaks. If you need help, contact support.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Fairness</h4>
+                        <p>All draws use cryptographically secure random number generation and are provably fair.</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Keno Game. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
