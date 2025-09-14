@@ -68,7 +68,7 @@
                                         <label for="regMobile">Mobile Number</label>
                                         <div class="mobile-input-group">
                                             <select id="countryCode" class="country-code">
-                                                <option value="+251">+251 (Ethiopia)</option>
+                                                <option value="+251">+251</option>
                                             </select>
                                             <div class="mobile-input-wrapper">
                                                 <input type="tel" id="regMobile" name="mobile" placeholder="9XXXXXXXXX" required style="display: block; width: 100%;">
@@ -196,7 +196,12 @@
 
                     <!-- Draw Display -->
                     <div class="draw-display">
-                        <h3>Latest Draw</h3>
+                        <div class="draw-header">
+                            <h3>Latest Draw</h3>
+                            <button class="btn btn-outline btn-small" id="newDrawBtn">
+                                <i class="fas fa-sync-alt"></i> New Draw
+                            </button>
+                        </div>
                         <div class="draw-info">
                             <div class="draw-numbers" id="drawNumbers">
                                 <div class="loading">Loading draw...</div>

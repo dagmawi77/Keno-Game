@@ -51,6 +51,12 @@ class KenoGame {
         document.getElementById('quickPickBtn').addEventListener('click', () => this.quickPick());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearSelection());
         document.getElementById('purchaseBtn').addEventListener('click', () => this.purchaseTicket());
+        
+        // Add new draw button if it exists
+        const newDrawBtn = document.getElementById('newDrawBtn');
+        if (newDrawBtn) {
+            newDrawBtn.addEventListener('click', () => this.generateNewDraw());
+        }
 
         // Configuration changes
         document.getElementById('spotSize').addEventListener('change', (e) => this.updateSpotSize(e.target.value));
@@ -125,7 +131,11 @@ class KenoGame {
         if (this.selectedNumbers.includes(number)) {
             // Remove number with animation
             this.selectedNumbers = this.selectedNumbers.filter(n => n !== number);
-            btn.classList.remove('selected');
+            btn.classList.remove('selected', 'bold-animation');
+            
+            // Reset styling
+            btn.style.fontWeight = '';
+            btn.style.transform = '';
             
             // Add animation class
             btn.style.animation = 'pulseOut 0.3s ease-out';
@@ -139,16 +149,20 @@ class KenoGame {
                 return;
             }
             
-            // Add number with animation
+            // Add number with enhanced animation
             this.selectedNumbers.push(number);
-            btn.classList.add('selected');
+            btn.classList.add('selected', 'bold-animation');
+            
+            // Add bold effect and scaling
+            btn.style.fontWeight = 'bold';
+            btn.style.transform = 'scale(1.05)';
             
             // Add animation class
-            btn.style.animation = 'pulseIn 0.3s ease-out';
+            btn.style.animation = 'pulseIn 0.4s ease-out';
             
             setTimeout(() => {
                 btn.style.animation = '';
-            }, 300);
+            }, 400);
         }
         
         this.updateSelectedNumbers();
@@ -227,22 +241,46 @@ class KenoGame {
     quickPick() {
         this.clearSelection();
         
+        // Create array of all available numbers (1-80)
         const availableNumbers = Array.from({ length: 80 }, (_, i) => i + 1);
-        const shuffled = availableNumbers.sort(() => Math.random() - 0.5);
         
+        // Proper Fisher-Yates shuffle to prevent duplicates
+        const shuffled = [...availableNumbers];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        
+        // Select the first N numbers (no duplicates guaranteed)
         this.selectedNumbers = shuffled.slice(0, this.currentSpotSize).sort((a, b) => a - b);
         
-        // Update UI with animation
+        // Show the selection process with focus effect
         this.selectedNumbers.forEach((num, index) => {
             setTimeout(() => {
                 const btn = document.querySelector(`[data-number="${num}"]`);
-                btn.classList.add('selected');
-                btn.style.animation = 'quickPickSelect 0.5s ease-out';
+                
+                // First show focus/highlight effect
+                btn.classList.add('focus-highlight');
+                btn.style.animation = 'focusPulse 0.3s ease-out';
+                
+                // Then select the number after focus effect
+                setTimeout(() => {
+                    btn.classList.remove('focus-highlight');
+                    btn.classList.add('selected', 'bold-animation');
+                    btn.style.animation = 'quickPickSelect 0.6s ease-out';
+                    
+                    // Add bold effect
+                    btn.style.fontWeight = 'bold';
+                    btn.style.transform = 'scale(1.1)';
                 
                 setTimeout(() => {
                     btn.style.animation = '';
-                }, 500);
-            }, index * 100); // Stagger the animation
+                        btn.style.transform = 'scale(1.05)'; // Keep slightly larger
+                        btn.classList.remove('bold-animation');
+                    }, 600);
+                }, 300); // Wait for focus effect to complete
+                
+            }, index * 200); // Longer stagger to show each selection clearly
         });
         
         this.updateSelectedNumbers();
@@ -252,7 +290,10 @@ class KenoGame {
     clearSelection() {
         this.selectedNumbers = [];
         document.querySelectorAll('.number-btn').forEach(btn => {
-            btn.classList.remove('selected', 'matched');
+            btn.classList.remove('selected', 'matched', 'bold-animation', 'focus-highlight');
+            btn.style.fontWeight = '';
+            btn.style.transform = '';
+            btn.style.animation = '';
         });
         this.updateSelectedNumbers();
         this.updateTicketSummary();
@@ -384,6 +425,34 @@ class KenoGame {
         `).join('');
     }
 
+    generateUniqueDrawNumbers() {
+        // Generate 20 unique numbers between 1 and 80 for Keno draw
+        const availableNumbers = Array.from({ length: 80 }, (_, i) => i + 1);
+        
+        // Proper Fisher-Yates shuffle to prevent duplicates
+        const shuffled = [...availableNumbers];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        
+        // Select first 20 numbers (no duplicates guaranteed)
+        return shuffled.slice(0, 20).sort((a, b) => a - b);
+    }
+
+    generateNewDraw() {
+        // Generate a new draw with unique numbers
+        const newDraw = {
+            drawNumber: 'D' + Date.now().toString().slice(-6),
+            drawTime: new Date().toISOString(),
+            numbers: this.generateUniqueDrawNumbers()
+        };
+        
+        this.displayDraw(newDraw);
+        this.checkTicketsAgainstDraw(newDraw);
+        this.showNotification('New draw generated with unique numbers!', 'success');
+    }
+
     async loadLatestDraw() {
         try {
             const response = await fetch(`${this.apiBase}/draws`);
@@ -391,13 +460,45 @@ class KenoGame {
 
             if (data.success && data.data.length > 0) {
                 const draw = data.data[0];
+                
+                // Ensure draw numbers are unique
+                if (draw.numbers && draw.numbers.length > 0) {
+                    const uniqueNumbers = [...new Set(draw.numbers)];
+                    if (uniqueNumbers.length !== draw.numbers.length) {
+                        console.warn('Duplicate numbers found in draw, generating unique numbers');
+                        draw.numbers = this.generateUniqueDrawNumbers();
+                    }
+                } else {
+                    draw.numbers = this.generateUniqueDrawNumbers();
+                }
+                
                 this.displayDraw(draw);
                 
                 // Check tickets against this draw
                 this.checkTicketsAgainstDraw(draw);
+            } else {
+                // Generate demo draw if no data from API
+                const demoDraw = {
+                    drawNumber: 'D' + Date.now().toString().slice(-6),
+                    drawTime: new Date().toISOString(),
+                    numbers: this.generateUniqueDrawNumbers()
+                };
+                
+                this.displayDraw(demoDraw);
+                this.checkTicketsAgainstDraw(demoDraw);
             }
         } catch (error) {
             console.error('Error loading draw:', error);
+            
+            // Generate demo draw if API fails
+            const demoDraw = {
+                drawNumber: 'D' + Date.now().toString().slice(-6),
+                drawTime: new Date().toISOString(),
+                numbers: this.generateUniqueDrawNumbers()
+            };
+            
+            this.displayDraw(demoDraw);
+            this.checkTicketsAgainstDraw(demoDraw);
         }
     }
 
@@ -447,9 +548,54 @@ class KenoGame {
         document.getElementById('drawTime').textContent = new Date(draw.drawTime).toLocaleString();
         
         const container = document.getElementById('drawNumbers');
-        container.innerHTML = draw.numbers.map((num, index) => 
-            `<div class="draw-number" style="animation-delay: ${index * 0.1}s">${num}</div>`
-        ).join('');
+        
+        // Clear container first
+        container.innerHTML = '<div class="loading">Drawing numbers...</div>';
+        
+        // Show "Latest Draw" title with animation
+        const drawDisplay = document.querySelector('.draw-display h3');
+        if (drawDisplay) {
+            drawDisplay.style.opacity = '0';
+            drawDisplay.style.transform = 'translateY(-20px)';
+            drawDisplay.style.transition = 'all 0.5s ease-out';
+            drawDisplay.classList.add('revealing');
+            
+            setTimeout(() => {
+                drawDisplay.style.opacity = '1';
+                drawDisplay.style.transform = 'translateY(0)';
+            }, 200);
+        }
+        
+        // Reveal numbers one by one with celebration animation
+        setTimeout(() => {
+            container.innerHTML = '';
+            
+            draw.numbers.forEach((num, index) => {
+                setTimeout(() => {
+                    const numberElement = document.createElement('div');
+                    numberElement.className = 'draw-number draw-number-celebration';
+                    numberElement.textContent = num;
+                    numberElement.style.opacity = '0';
+                    numberElement.style.transform = 'scale(0) rotate(0deg)';
+                    numberElement.style.animation = 'drawNumberCelebration 1.5s ease-out forwards';
+                    
+                    container.appendChild(numberElement);
+                    
+                    // Add celebration effect
+                    this.createCelebrationEffect(numberElement);
+                    
+                    // Remove revealing class from title after first number appears
+                    if (index === 0) {
+                        setTimeout(() => {
+                            if (drawDisplay) {
+                                drawDisplay.classList.remove('revealing');
+                            }
+                        }, 500);
+                    }
+                    
+                }, index * 400); // 400ms delay between each number for more dramatic effect
+            });
+        }, 1000); // Wait 1 second before starting number reveal
     }
 
     showAuthModal(mode) {
@@ -750,6 +896,48 @@ class KenoGame {
         return true;
     }
 
+    createCelebrationEffect(element) {
+        // Create confetti-like particles around the number
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 8; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'celebration-particle';
+            particle.style.cssText = `
+                position: fixed;
+                left: ${centerX}px;
+                top: ${centerY}px;
+                width: 6px;
+                height: 6px;
+                background: ${['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'][i % 6]};
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 2000;
+                animation: celebrationParticle 1s ease-out forwards;
+            `;
+            
+            // Random direction for particles
+            const angle = (i / 8) * Math.PI * 2;
+            const distance = 50 + Math.random() * 30;
+            const endX = centerX + Math.cos(angle) * distance;
+            const endY = centerY + Math.sin(angle) * distance;
+            
+            particle.style.setProperty('--end-x', `${endX}px`);
+            particle.style.setProperty('--end-y', `${endY}px`);
+            
+            document.body.appendChild(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 1000);
+        }
+    }
+
     showNotification(message, type = 'info') {
         // Create notification element
         const notification = document.createElement('div');
@@ -849,14 +1037,27 @@ style.textContent = `
         0% {
             transform: scale(0) rotate(180deg);
             opacity: 0;
+            font-weight: normal;
+        }
+        25% {
+            transform: scale(1.3) rotate(90deg);
+            opacity: 0.9;
+            font-weight: bold;
         }
         50% {
-            transform: scale(1.2) rotate(90deg);
-            opacity: 0.8;
+            transform: scale(1.1) rotate(45deg);
+            opacity: 1;
+            font-weight: bold;
+        }
+        75% {
+            transform: scale(1.05) rotate(10deg);
+            opacity: 1;
+            font-weight: bold;
         }
         100% {
-            transform: scale(1) rotate(0deg);
+            transform: scale(1.05) rotate(0deg);
             opacity: 1;
+            font-weight: bold;
         }
     }
 
