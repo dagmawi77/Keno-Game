@@ -18,6 +18,7 @@ class KenoGame {
     async init() {
         this.setupEventListeners();
         this.generateNumberGrid();
+        this.ensureMobileInputVisible();
         
         if (this.token) {
             await this.verifyToken();
@@ -85,6 +86,23 @@ class KenoGame {
                 this.validateMobileNumber(e.target.value);
             }
         });
+    }
+
+    ensureMobileInputVisible() {
+        const mobileInput = document.getElementById('regMobile');
+        if (mobileInput) {
+            mobileInput.style.display = 'block';
+            mobileInput.style.visibility = 'visible';
+            mobileInput.style.opacity = '1';
+            mobileInput.style.width = '100%';
+            mobileInput.style.height = 'auto';
+            mobileInput.style.minHeight = '48px';
+            
+            // Debug: Log to console
+            console.log('Mobile input element found and made visible:', mobileInput);
+        } else {
+            console.error('Mobile input element not found!');
+        }
     }
 
     generateNumberGrid() {
@@ -459,6 +477,11 @@ class KenoGame {
             registerForm.style.display = 'block';
             switchText.textContent = 'Already have an account?';
             switchBtn.textContent = 'Login';
+            
+            // Ensure mobile input is visible when showing registration form
+            setTimeout(() => {
+                this.ensureMobileInputVisible();
+            }, 100);
         }
 
         modal.classList.add('show');
