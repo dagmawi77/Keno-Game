@@ -198,9 +198,16 @@ body {
 
 /* Mobile Input Group */
 .mobile-input-group {
-    display: flex !important;
+    display: flex;
     gap: 0.5rem;
     width: 100%;
+    align-items: stretch;
+}
+
+.mobile-input-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
     align-items: center;
 }
 
@@ -214,12 +221,19 @@ body {
     font-weight: 500;
     color: #667eea;
     font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.mobile-input-group input {
-    flex: 1;
+.country-code:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+}
+
+.mobile-input-wrapper input[type="tel"] {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.75rem 2.5rem 0.75rem 0.75rem;
     border: 2px solid #e1e5e9;
     border-radius: 8px;
     font-size: 1rem;
@@ -227,21 +241,58 @@ body {
     background: white;
     color: #333;
     min-width: 0;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
 }
 
-#regMobile {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
+.mobile-icon {
+    position: absolute;
+    right: 0.75rem;
+    color: #667eea;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: color 0.3s ease;
 }
 
-.mobile-input-group input:focus {
+.mobile-input-wrapper input[type="tel"]:focus {
     outline: none;
     border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.mobile-input-wrapper input[type="tel"]:focus + .mobile-icon {
+    color: #667eea;
+}
+
+.mobile-input-wrapper input[type="tel"]::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.mobile-input-wrapper input[type="tel"].error {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.mobile-input-wrapper input[type="tel"].error + .mobile-icon {
+    color: #dc3545;
+}
+
+.mobile-input-wrapper input[type="tel"].valid {
+    border-color: #28a745;
+    background-color: #f8fff8;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.mobile-input-wrapper input[type="tel"].valid + .mobile-icon {
+    color: #28a745;
+}
+
+.form-help {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
 }
 
 /* OTP Verification */
@@ -930,16 +981,18 @@ body {
     .mobile-input-group {
         flex-direction: row;
         gap: 0.5rem;
+        align-items: stretch;
     }
 
     .country-code {
         width: 120px;
         flex-shrink: 0;
+        font-size: 0.9rem;
+        padding: 0.6rem;
     }
     
-    .mobile-input-group input {
-        flex: 1;
-        min-width: 0;
+    .mobile-input-wrapper input[type="tel"] {
+        font-size: 0.9rem;
     }
 }
 
@@ -965,5 +1018,23 @@ body {
     .otp-actions {
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .mobile-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .country-code {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .mobile-input-wrapper {
+        width: 100%;
+    }
+    
+    .mobile-input-wrapper input[type="tel"] {
+        width: 100%;
     }
 }

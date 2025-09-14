@@ -69,6 +69,22 @@ class KenoGame {
         document.getElementById('otpCode').addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
         });
+
+        // Mobile number input formatting
+        document.getElementById('regMobile').addEventListener('input', (e) => {
+            // Only allow digits and limit to 10 characters
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+            
+            // Clear validation states on input
+            e.target.classList.remove('error', 'valid');
+        });
+
+        // Mobile number input validation on blur
+        document.getElementById('regMobile').addEventListener('blur', (e) => {
+            if (e.target.value) {
+                this.validateMobileNumber(e.target.value);
+            }
+        });
     }
 
     generateNumberGrid() {
@@ -510,14 +526,8 @@ class KenoGame {
             return;
         }
 
-        if (mobile.length < 9 || mobile.length > 10) {
-            this.showNotification('Please enter a valid Ethiopian mobile number (9-10 digits)', 'error');
-            return;
-        }
-        
-        // Ethiopian mobile number validation (should start with 9)
-        if (!mobile.startsWith('9')) {
-            this.showNotification('Ethiopian mobile numbers must start with 9', 'error');
+        // Validate mobile number using the validation method
+        if (!this.validateMobileNumber(mobile)) {
             return;
         }
 
@@ -687,6 +697,34 @@ class KenoGame {
         document.getElementById('gameInterface').style.display = 'none';
         document.getElementById('userInfo').style.display = 'none';
         document.getElementById('authButtons').style.display = 'flex';
+    }
+
+    validateMobileNumber(mobileNumber) {
+        const mobileInput = document.getElementById('regMobile');
+        
+        // Remove any existing validation styling
+        mobileInput.classList.remove('error', 'valid');
+        
+        if (!mobileNumber) {
+            return false;
+        }
+        
+        // Ethiopian mobile number validation
+        if (mobileNumber.length < 9 || mobileNumber.length > 10) {
+            mobileInput.classList.add('error');
+            this.showNotification('Mobile number must be 9-10 digits', 'error');
+            return false;
+        }
+        
+        if (!mobileNumber.startsWith('9')) {
+            mobileInput.classList.add('error');
+            this.showNotification('Ethiopian mobile numbers must start with 9', 'error');
+            return false;
+        }
+        
+        // Valid mobile number
+        mobileInput.classList.add('valid');
+        return true;
     }
 
     showNotification(message, type = 'info') {
